@@ -1,0 +1,16 @@
+:global{
+  div[data-automationid="SiteHeader"]{
+    display: none;
+  }
+  div[class^='pageTitle_']{
+    display: none;
+  }
+
+  .CanvasZone {
+      max-width: 100%;
+      padding: 0;
+  }
+  .CanvasZone:not(.CanvasZone--fullWidth) .ControlZone {
+    padding: 0;
+  }
+}
