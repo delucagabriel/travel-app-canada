@@ -1,10 +1,10 @@
 import * as React from 'react';
-import HocCard from '../HOC/HocCardCard';
 import { Grid, Avatar, Paper, Typography, makeStyles, Theme, createStyles } from '@material-ui/core';
 import { useContext, useState, useEffect } from 'react';
-import { Context } from '../Utils/Context';
 import DoneAllSharpIcon from '@material-ui/icons/DoneAllSharp';
 import TimerIcon from '@material-ui/icons/Timer';
+import HocCard from '../HOC/HocCardCard';
+import { Context } from '../../Utils/Context';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

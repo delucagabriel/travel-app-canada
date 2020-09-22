@@ -3,18 +3,17 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
 import * as yup from "yup";
 import { useState, useContext } from 'react';
-import { getEmployee } from '../services/EmployeesService';
-import { newRequest } from '../services/RequestServices';
-import { IEmployee } from '../Interfaces/IEmployee';
+import { getEmployee } from '../../services/EmployeesService';
+import { newRequest } from '../../services/RequestServices';
+import { IEmployee } from '../../Interfaces/IEmployee';
 import { TextField, Select, MenuItem, FormLabel, Button,
   Grid, Input, Paper, Typography,
   Dialog, DialogTitle, DialogContent, DialogContentText,
-  DialogActions, Snackbar } from '@material-ui/core';
+  DialogActions, Snackbar, Checkbox, FormControlLabel } from '@material-ui/core';
 import { Alert, AlertProps } from '@material-ui/lab';
-import { Context } from '../Utils/Context';
+import { Context } from '../../Utils/Context';
 
-
-
+let today = new Date(new Date().getUTCFullYear(), new Date().getMonth(), new Date().getDate());
 
 interface ISnack extends AlertProps {
   open: boolean;
@@ -39,6 +38,7 @@ interface IFormInputs {
   Location:string;
   AcceptedTerm: boolean;
   ApprovalWorkflow:boolean;
+  RushedShipment:boolean;
 }
 
 const schema = yup.object().shape({
@@ -50,22 +50,24 @@ const schema = yup.object().shape({
   PhoneNumber: yup.string().required(),
   Approver: yup.string().required(),
   ApproverName: yup.string().required(),
-  ApproverLevel: yup.string().required().notOneOf(['STAFF','SUP', 'D-4'], 'Minimum level equal to D-3'),
+  ApproverLevel: yup.string().required().notOneOf(['STAFF','SUP'], 'Minimum level equal to D-4'),
   CostCenter: yup.string().required(),
   CompanyName: yup.string().required(),
   Location: yup.string().required(),
+  RushedShipment: yup.bool(),
   NewLimit: yup.number()
     .positive()
     .min(5000)
-    .max(100000)
+    .when('CardType', (CardType, rule)=> CardType === 'PCard'? rule.max(20000) : rule.max(100000))
     .required(),
   CompanyCode: yup.string()
     .required(),
-  TravelDate: yup.date().required(),
+  TravelDate: yup.date()
+    .when('RushedShipment', (RushedShipment, rule) => RushedShipment ? rule.min(new Date(today.getUTCFullYear(),today.getMonth(),today.getDate()+2)) : rule.min(new Date(today.getUTCFullYear(),today.getMonth(),today.getDate()+10)))
+    .required(),
   AcceptedTerm: yup.boolean().required(),
   ApprovalWorkflow: yup.boolean().default(true),
   ApproverEmail: yup.string().email().required()
-
 });
 
 export default function NewCreditCard(){
@@ -83,7 +85,13 @@ export default function NewCreditCard(){
     message: "",
     severity:'info'
   });
+  const [rushChecked, setRushChecked] = useState(false);
   const { updateContext } = useContext(Context);
+
+
+  const handleChangeRush = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRushChecked(event.target.checked);
+  };
 
   const handleAccept = ()=>{
     setAcceptedTerm(true);
@@ -103,6 +111,7 @@ export default function NewCreditCard(){
   .then(emp => setApprover(emp));
 
   const onSubmit = (data:IFormInputs, e) => {
+    console.log(data);
     newRequest(data)
       .then(res => {
         setSnackMessage({open:true, message: `Request successfully recorded under ID:${res.data.ID}`, severity:"success"});
@@ -119,9 +128,9 @@ export default function NewCreditCard(){
     const tenantName = '/teams/travel_support/Shared Documents';
     const TCard = {linkName:`${tenantName}/TCARD_DOC.pdf`, Title:'Travel Card'};
     const PCard = {linkName:`${tenantName}/PCARD_DOC.pdf`, Title:'Purchase Card'};
-    let linkTerm = cardTypeTerm === 'TCard'?TCard:PCard;
+    let linkTerm = cardTypeTerm === 'TCard'? TCard : PCard;
 
-    return <Button variant="contained" color="secondary" onClick={()=> window.open(linkTerm.linkName)}> {`Term of ${linkTerm.Title}`} </Button>;
+    return <Button variant="contained" color="secondary" onClick={()=> window.open(linkTerm.linkName)}> {`Terms of ${linkTerm.Title}`} </Button>;
   };
 
 
@@ -182,7 +191,7 @@ export default function NewCreditCard(){
                   variant="outlined"
                   type="search"
                   name="BeneficiaryID"
-                  label="Beneficiary ID"
+                  label="Employee ID"
                   onBlur={ e=> handleGetEmployee(e.target.value) }
                   inputRef={register}
                   error={errors.BeneficiaryID?true:false}
@@ -242,6 +251,18 @@ export default function NewCreditCard(){
                 />
               </Grid>
 
+              <Grid item xs={12} sm={12} md={12} lg={12} xl={12} >
+                <TextField
+                  variant="outlined"
+                  fullWidth
+                  type="text"
+                  name="Location"
+                  label="Address to be sent"
+                  inputRef={register}
+                  error={errors.Location?true:false}
+                  helperText={errors.Location && errors.Location.message}
+                />
+              </Grid>
 
               <Grid item xs={12} sm={4} md={3} lg={4} xl={4} >
                 <TextField
@@ -290,9 +311,25 @@ export default function NewCreditCard(){
                   helperText={errors.ApproverLevel && errors.ApproverLevel.message}
                 />
               </Grid>
+              <Grid item xs={12} sm={12} md={12} lg={12} xl={12} >
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={rushChecked}
+                    onChange={handleChangeRush}
+                    name="RushedShipment"
+                    inputRef={register}
+                  />
+                }
+                label="Rushed shipping"
+              />
+              </Grid>
+              <Grid item xs={12} sm={12} md={12} lg={12} xl={12} >
+                <Typography variant="caption"> { rushChecked ? "* A fee of $35 CAD will be charged for this type of shipment":"* The card will be sent within 10 days after approval"} </Typography>
+              </Grid>
               <Grid container item xs={12} sm={12} md={12} lg={12} xl={12} justify="space-between">
                 <Button variant="outlined" color="secondary" onClick={handleOpenTerm}>
-                  Open Term
+                  Open Terms of Agreement
                 </Button>
                 <Button disabled={submitDisabled} type="submit" variant="contained" color="primary">
                   Submit
@@ -304,18 +341,18 @@ export default function NewCreditCard(){
                   aria-labelledby="alert-dialog-title"
                   aria-describedby="alert-dialog-description"
                 >
-                  <DialogTitle id="alert-dialog-title">Statement of responsability</DialogTitle>
+                  <DialogTitle id="alert-dialog-title">Terms of Agreement</DialogTitle>
                   <DialogContent>
                     <DialogContentText id="alert-dialog-description">
                       <Typography>
                         <Term cardTypeTerm={cardType} />
                         <p>
-                          As an employee of Vale Canada Limited or any subsidiary thereof (collectively, "the Company"), I understand that, by accepting this term, I agree with everything described in the membership document.
+                          As an employee of Vale Canada Limited or any subsidiary thereof (collectively, "the Company"), I understand that, by accepting this terms, I agree with everything described in the membership document.
                         </p>
                       </Typography>
                     </DialogContentText>
                     <DialogActions>
-                      <Button variant="contained" color='primary' onClick={handleAccept}>Accept Term</Button>
+                      <Button variant="contained" color='primary' onClick={handleAccept}>Accept Terms</Button>
                     </DialogActions>
                   </DialogContent>
                 </Dialog>
@@ -325,7 +362,7 @@ export default function NewCreditCard(){
               <Input inputRef={register} readOnly type="hidden" id="CostCenter" name="CostCenter" value={employee && employee.COST_CENTER_CODE } />
               <Input inputRef={register} readOnly type="hidden" id="CompanyCode" name="CompanyCode" value={employee && employee.COMPANY_CODE } />
               <Input inputRef={register} readOnly type="hidden" id="CompanyName" name="CompanyName" value={employee && employee.COMPANY_DESC } />
-              <Input inputRef={register} readOnly type="hidden" id="Location" name="Location" value={employee && employee.BUSINESS_UNIT + " - " + employee.FACILITY_DESCRIPTION } />
+
               <Input inputRef={register} readOnly type="hidden" id="ApproverEmail" name="ApproverEmail" value={approver && approver.WORK_EMAIL_ADDRESS } />
 
             </Grid >

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useContext, useState } from 'react';
 import clsx from 'clsx';
 import { createStyles, makeStyles, useTheme, Theme } from '@material-ui/core/styles';
 import { Drawer, AppBar, CssBaseline, Toolbar, IconButton, Typography,
@@ -8,8 +9,7 @@ import AddBoxIcon from '@material-ui/icons/AddBox';
 import Cancel from '@material-ui/icons/CancelPresentation';
 import Swap from '@material-ui/icons/SwapVerticalCircle';
 import { useHistory } from 'react-router-dom';
-import { Context } from '../Utils/Context';
-import { useContext, useState } from 'react';
+import { Context } from '../../Utils/Context';
 
 const drawerWidth = 200;
 
@@ -106,9 +106,9 @@ export default function MiniDrawer({children}) {
       onClick: ()=> history.push("/cancelCard")
     },
     {
-      text: "Change limit",
+      text: "Limit change",
       icon:<Swap />,
-      onClick: ()=> history.push("/changeLimit")
+      onClick: ()=> history.push("/limitChange")
     },
   ];
 
@@ -190,7 +190,9 @@ export default function MiniDrawer({children}) {
             return(
               <ListItem button key={text} onClick={onClick}>
               <ListItemIcon>{icon}</ListItemIcon>
-                <ListItemText primary={text} />
+                <ListItemText>
+                  <Typography variant="caption"> { text } </Typography>
+                </ListItemText>
               </ListItem>
             );
           }) }

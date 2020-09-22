@@ -3,7 +3,7 @@ import { ICreditCardRequestsProps } from './ICreditCardRequestsProps';
 import { Routes } from './Routes';
 
 import "./globalStyles.module.scss";
-import { Provider } from './Utils/Context';
+import { Provider } from '../Utils/Context';
 
 export default class CreditCardRequests extends React.Component<ICreditCardRequestsProps, {}> {
   public constructor(context: ICreditCardRequestsProps){

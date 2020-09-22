@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { useContext, useState } from 'react';
-import { Context } from '../Utils/Context';
 import { TableContainer, Paper, Table, TableHead, TableRow, TableCell, TableBody, Grid, Dialog, Hidden, Button, Snackbar } from '@material-ui/core';
-import { RequestDetailsComponent } from '../Details/RequestDetailsComponent';
-import ServiceApproval from '../Forms/ServiceApproval';
 import { Alert, AlertProps } from '@material-ui/lab';
 import CloseIcon from '@material-ui/icons/Close';
+import { Context } from '../../Utils/Context';
+import { RequestDetailsComponent } from '../Details/RequestDetailsComponent';
+import ServiceApproval from '../Forms/ServiceApproval';
 
 
 interface ISnack extends AlertProps {

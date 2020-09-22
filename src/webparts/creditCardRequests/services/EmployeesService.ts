@@ -48,7 +48,7 @@ export const batchInsertEmployees = async (data:IEmployee[]) => {
       .catch(error => console.log('Insert Error:', error));
     }
   });
-  Sleep(500);
+  Sleep(1000);
   await batch.execute();
   return results;
 };
@@ -66,7 +66,7 @@ export const batchUpdateEmployees = async (data:IEmployee[]) => {
       .catch(error => console.log('Update Error:', error));
     }
   });
-  Sleep(500);
+  Sleep(1000);
   await batch.execute();
   return results;
 };

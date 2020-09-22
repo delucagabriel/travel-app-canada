@@ -1,11 +1,13 @@
 import * as React from 'react';
 import { DialogTitle, DialogContent, DialogContentText,
-  ListItem, ListItemText, Grid, Divider, Button } from '@material-ui/core';
+  ListItem, ListItemText, Grid, Divider } from '@material-ui/core';
 
 export const RequestDetailsComponent = ({requestDetails, children=null})=>{
   return(
     <>
-      <DialogTitle id="alert-dialog-title">Request Details - ID: {requestDetails && requestDetails.Id}</DialogTitle>
+      <DialogTitle id="alert-dialog-title">
+        Request Details - ID: {requestDetails && requestDetails.Id} { requestDetails && requestDetails.RushedShipment ? "*** Attention: Send urgently ***" : null }
+      </DialogTitle>
       <DialogContent style={{width:'100%'}}>
         <DialogContentText id="alert-dialog-description">
           <Grid container spacing={2}>

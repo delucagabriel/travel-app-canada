@@ -2,10 +2,10 @@ import * as React from 'react';
 import { TextField, Select, MenuItem, Input, Button, Grid, InputLabel, Paper } from '@material-ui/core';
 import { useContext } from 'react';
 import { useForm, Controller } from "react-hook-form";
-import { updateRequest } from '../services/RequestServices';
 import { yupResolver } from '@hookform/resolvers';
 import * as yup from "yup";
-import { Context } from '../Utils/Context';
+import { updateRequest } from '../../services/RequestServices';
+import { Context } from '../../Utils/Context';
 
 interface IFormInputs {
   Id:number;

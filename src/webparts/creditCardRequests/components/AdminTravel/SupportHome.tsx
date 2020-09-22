@@ -1,11 +1,11 @@
 import * as React from 'react';
-import HocCard from '../HOC/HocCardCard';
 import { Grid, Avatar, Paper, Typography, makeStyles, Theme, createStyles, Card, CardContent } from '@material-ui/core';
 import { useContext, useState, useEffect } from 'react';
-import { Context } from '../Utils/Context';
 import DoneAllSharpIcon from '@material-ui/icons/DoneAllSharp';
 import TimerIcon from '@material-ui/icons/Timer';
 import * as moment from 'moment';
+import HocCard from '../HOC/HocCardCard';
+import { Context } from '../../Utils/Context';
 
 const countOccurrences = arr => arr.reduce((prev, curr) => (prev[curr] = ++prev[curr] || 1, prev), {});
 const unique = arr => arr.reduce((acc, el) => acc.includes(el) ? acc : [...acc, el], []);

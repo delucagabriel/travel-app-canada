@@ -1,17 +1,17 @@
 import * as React from 'react';
+import { useState, useContext } from 'react';
 import {
   TextField, Select, MenuItem, FormLabel, Button,
   Grid, Input, Paper, Snackbar
 } from '@material-ui/core';
-import { useState, useContext } from 'react';
-import { getEmployee } from '../services/EmployeesService';
+import { AlertProps, Alert } from '@material-ui/lab';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers';
 import * as yup from "yup";
-import { newRequest } from '../services/RequestServices';
-import { AlertProps, Alert } from '@material-ui/lab';
-import { IEmployee } from '../Interfaces/IEmployee';
-import { Context } from '../Utils/Context';
+import { getEmployee } from '../../services/EmployeesService';
+import { newRequest } from '../../services/RequestServices';
+import { IEmployee } from '../../Interfaces/IEmployee';
+import { Context } from '../../Utils/Context';
 
 
 interface IFormInputs {
@@ -117,7 +117,7 @@ export default function ChangeLimit() {
             <Controller
               as={
                 <Select disabled fullWidth>
-                  <MenuItem value="Change Limit">Change limit</MenuItem>
+                  <MenuItem value="Change Limit">Limit change</MenuItem>
                 </Select>
               }
               id="Process"
@@ -146,7 +146,7 @@ export default function ChangeLimit() {
 
           <Grid item xs={12} sm={3} md={3} lg={3} xl={3} >
           <TextField fullWidth type="text" required name="BeneficiaryID" variant="outlined"
-              label="Employee" onBlur={ e=> handleGetEmployee(e.target.value) }
+              label="Employee ID" onBlur={ e=> handleGetEmployee(e.target.value) }
               inputRef={register}
               error={errors.BeneficiaryID?true:false}
               helperText={errors.BeneficiaryID && errors.BeneficiaryID.message}

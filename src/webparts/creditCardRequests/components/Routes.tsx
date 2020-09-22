@@ -12,9 +12,9 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { SupportHome } from './AdminTravel/SupportHome';
 import AllPendingRequests from './Lists/AllPendingRequests';
 import AllCompletedRequests from './Lists/AllCompletedRequests';
-import { InsertOrUpdateEmployees } from './InsertOrUpdateEmployees';
+import { InsertOrUpdateEmployees } from './Forms/InsertOrUpdateEmployees';
 import { useContext } from 'react';
-import { Context } from './Utils/Context';
+import { Context } from '../Utils/Context';
 
 const theme = createMuiTheme({
   palette: {
@@ -36,7 +36,7 @@ export const Routes = ()=>{
   function PrivateRoute({ children, ...rest }) {
     return (
       <Route {...rest } render={
-        ({ location }) => employeeInfos.isAdmin ? ( children ) : ( <Redirect to={{ pathname: "/",  state: { from: location } }} /> )
+        ({ location }) => employeeInfos && employeeInfos.isAdmin ? ( children ) : ( <Redirect to={{ pathname: "/",  state: { from: location } }} /> )
         }
       />
     );
@@ -53,7 +53,7 @@ export const Routes = ()=>{
             <Route path="/my-completed-requests" exact={true} component={MyCompletedRequests} />
             <Route path="/newCreditCard" exact={true} component={NewCreditCard} />
             <Route path="/CancelCard" exact={true} component={CancelCard} />
-            <Route path="/ChangeLimit" exact={true} component={ChangeLimit} />
+            <Route path="/limitChange" exact={true} component={ChangeLimit} />
             {/* <Route path="/all-pending-requests" exact={true} component={AllPendingRequests} />
             <Route path="/all-completed-requests" exact={true} component={AllCompletedRequests} /> */}
           {/* { Private routes } */}

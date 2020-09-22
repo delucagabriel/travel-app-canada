@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { TextField, Select, MenuItem, FormLabel, Grid, Button, Input, Paper, Typography, Snackbar } from '@material-ui/core';
 import { useState, useContext } from 'react';
-import { getEmployee } from '../services/EmployeesService';
-import { useForm, Controller } from "react-hook-form";
-import { newRequest } from '../services/RequestServices';
-import { IEmployee } from '../Interfaces/IEmployee';
 import { AlertProps, Alert } from '@material-ui/lab';
 import { yupResolver } from '@hookform/resolvers';
 import * as yup from "yup";
-import { Context } from '../Utils/Context';
+import { getEmployee } from '../../services/EmployeesService';
+import { useForm, Controller } from "react-hook-form";
+import { newRequest } from '../../services/RequestServices';
+import { IEmployee } from '../../Interfaces/IEmployee';
+import { Context } from '../../Utils/Context';
 
 interface IFormInputs {
   Macroprocess:string;
@@ -141,7 +141,7 @@ export default function CancelCard() {
 
           <Grid item xs={12} sm={6} md={6} lg={6} xl={6} >
             <TextField fullWidth type="text" required name="BeneficiaryID" variant="outlined"
-              label="Beneficiary ID" onBlur={ e=> handleGetEmployee(e.target.value) }
+              label="Employee ID" onBlur={ e=> handleGetEmployee(e.target.value) }
               inputRef={register}
               error={errors.BeneficiaryID?true:false}
               helperText={errors.BeneficiaryID && errors.BeneficiaryID.message}
