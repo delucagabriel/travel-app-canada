@@ -1,34 +1,17 @@
 import * as React from 'react';
 import { TextField, Select, MenuItem, FormLabel, Grid, Button, Input, Paper, Typography, Snackbar } from '@material-ui/core';
 import { useState, useContext } from 'react';
-import { AlertProps, Alert } from '@material-ui/lab';
+import { Alert } from '@material-ui/lab';
 import { yupResolver } from '@hookform/resolvers';
 import * as yup from "yup";
 import { getEmployee } from '../../services/EmployeesService';
 import { useForm, Controller } from "react-hook-form";
 import { newRequest } from '../../services/RequestServices';
 import { IEmployee } from '../../Interfaces/IEmployee';
+import { IRequest } from '../../Interfaces/IRequest';
+import { ISnack } from '../../Interfaces/ISnack';
 import { Context } from '../../Utils/Context';
 
-interface IFormInputs {
-  Macroprocess:string;
-  Process:string;
-  CardType:string;
-  BeneficiaryID:string;
-  EndDate:Date;
-  EmployeeName:string;
-  EmployeeEmail:string;
-  CompanyCode:number;
-  CompanyName:string;
-  ApprovalWorkflow:boolean;
-  Last4Digits:string;
-  Reason: string;
-}
-
-interface ISnack extends AlertProps {
-  open: boolean;
-  message: string;
-}
 
 const schema = yup.object().shape({
   Macroprocess: yup.string().required(),
@@ -38,10 +21,7 @@ const schema = yup.object().shape({
   EmployeeName: yup.string().required(),
   EmployeeEmail: yup.string().required(),
   CompanyName: yup.string().required(),
-  CompanyCode: yup.number()
-    .integer()
-    .positive()
-    .required(),
+  CompanyCode: yup.string().required(),
   Last4Digits: yup.string()
     .length(4)
     .matches(/\d/, "Only numbers")
@@ -56,7 +36,7 @@ const schema = yup.object().shape({
 });
 
 export default function CancelCard() {
-  const { register, handleSubmit, control, errors, reset } = useForm<IFormInputs>({
+  const { register, handleSubmit, control, errors, reset } = useForm<IRequest>({
     resolver: yupResolver(schema)
   });
   const [employee, setEmployee] = useState<IEmployee>();
@@ -71,7 +51,7 @@ export default function CancelCard() {
     .then(emp => setEmployee(emp));
 
 
-  const onSubmit = (data:IFormInputs, e) => {
+  const onSubmit = (data:IRequest, e) => {
     newRequest(data)
       .then(res => {
         setSnackMessage({open:true, message: `Request successfully recorded under ID:${res.data.ID}`, severity:"success"});

@@ -1,4 +1,5 @@
 export interface IRequest{
+  Id?:number;
   ApprovalStatus?: string;
   Macroprocess?: string;
   Process?: string;
@@ -22,7 +23,7 @@ export interface IRequest{
   Location?: string;
   ApproverLevel?: string;
   CostCenter?: string;
-  CompanyCode?: number;
+  CompanyCode?: string;
   CompanyName?: string;
   PhoneNumber?: string;
   ApprovedAt?: Date;

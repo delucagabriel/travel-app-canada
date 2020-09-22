@@ -110,6 +110,15 @@ export const RequestDetailsComponent = ({requestDetails, children=null})=>{
                 </ListItem>
                 <ListItem >
                 {
+                  requestDetails.EndDate &&
+                  <Grid xs={12} sm={12} md={6} lg={6} xl={6}>
+                  <ListItemText primaryTypographyProps={{color:"secondary"}}
+                  primary="EndDate" secondary={requestDetails.EndDate}/>
+                  </Grid>
+                }
+                </ListItem>
+                <ListItem >
+                {
                   requestDetails.Last4Digits &&
                   <Grid xs={12} sm={12} md={6} lg={6} xl={6}>
                     <ListItemText primaryTypographyProps={{color:"secondary"}}

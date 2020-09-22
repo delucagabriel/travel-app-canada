@@ -6,40 +6,16 @@ import { useState, useContext } from 'react';
 import { getEmployee } from '../../services/EmployeesService';
 import { newRequest } from '../../services/RequestServices';
 import { IEmployee } from '../../Interfaces/IEmployee';
+import { IRequest } from '../../Interfaces/IRequest';
+import { ISnack } from '../../Interfaces/ISnack';
 import { TextField, Select, MenuItem, FormLabel, Button,
   Grid, Input, Paper, Typography,
   Dialog, DialogTitle, DialogContent, DialogContentText,
   DialogActions, Snackbar, Checkbox, FormControlLabel } from '@material-ui/core';
-import { Alert, AlertProps } from '@material-ui/lab';
+import { Alert } from '@material-ui/lab';
 import { Context } from '../../Utils/Context';
 
 let today = new Date(new Date().getUTCFullYear(), new Date().getMonth(), new Date().getDate());
-
-interface ISnack extends AlertProps {
-  open: boolean;
-  message: string;
-}
-
-interface IFormInputs {
-  Macroprocess:string;
-  Process:string;
-  CardType:string;
-  BeneficiaryID:string;
-  NewLimit:number;
-  TravelDate:Date;
-  EmployeeName:string;
-  PhoneNumber:number;
-  Approver:string;
-  ApproverName:string;
-  ApproverLevel:string;
-  CostCenter:string;
-  CompanyCode:number;
-  CompanyName:string;
-  Location:string;
-  AcceptedTerm: boolean;
-  ApprovalWorkflow:boolean;
-  RushedShipment:boolean;
-}
 
 const schema = yup.object().shape({
   Macroprocess: yup.string().required(),
@@ -53,14 +29,15 @@ const schema = yup.object().shape({
   ApproverLevel: yup.string().required().notOneOf(['STAFF','SUP'], 'Minimum level equal to D-4'),
   CostCenter: yup.string().required(),
   CompanyName: yup.string().required(),
+  CompanyCode: yup.string().required(),
   Location: yup.string().required(),
   RushedShipment: yup.bool(),
   NewLimit: yup.number()
     .positive()
     .min(5000)
-    .when('CardType', (CardType, rule)=> CardType === 'PCard'? rule.max(20000) : rule.max(100000))
-    .required(),
-  CompanyCode: yup.string()
+    .when('CardType', (CardType, rule)=> CardType === 'PCard'?
+      rule.max(20000, "For P.Card Must be less than or equal to 20,000") :
+      rule.max(100000, "Must be less than or equal to 100,000"))
     .required(),
   TravelDate: yup.date()
     .when('RushedShipment', (RushedShipment, rule) => RushedShipment ? rule.min(new Date(today.getUTCFullYear(),today.getMonth(),today.getDate()+2)) : rule.min(new Date(today.getUTCFullYear(),today.getMonth(),today.getDate()+10)))
@@ -71,7 +48,7 @@ const schema = yup.object().shape({
 });
 
 export default function NewCreditCard(){
-  const { register, handleSubmit, control, errors, reset, getValues } = useForm<IFormInputs>({
+  const { register, handleSubmit, control, errors, reset, getValues } = useForm<IRequest>({
     resolver: yupResolver(schema)
   });
   const [employee, setEmployee] = useState<IEmployee>();
@@ -110,8 +87,7 @@ export default function NewCreditCard(){
   const handleGetApprover = value =>getEmployee("IAM_ACCESS_IDENTIFIER", value.toUpperCase())
   .then(emp => setApprover(emp));
 
-  const onSubmit = (data:IFormInputs, e) => {
-    console.log(data);
+  const onSubmit = (data:IRequest, e) => {
     newRequest(data)
       .then(res => {
         setSnackMessage({open:true, message: `Request successfully recorded under ID:${res.data.ID}`, severity:"success"});
