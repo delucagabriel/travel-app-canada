@@ -18,7 +18,7 @@ export default function AllCompletedRequests() {
 
 
   useEffect(()=>{
-    setFilteredRequests(allRequests.filter(request => request.Status === "Success" || request.Status === "Unsuccess" ));
+    setFilteredRequests(allRequests.filter(request => request.Status === "Success" || request.Status === "Unsuccessful" ));
   }, [allRequests]);
 
   const handleFilter= event => setFilter(event.target.value.toLowerCase());
@@ -30,7 +30,7 @@ export default function AllCompletedRequests() {
   return (
     <Grid container>
       <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
-        <TextField label="Beneficiary filter" variant="outlined" onChange={handleFilter}/>
+        <TextField label="Cardholder filter" variant="outlined" onChange={handleFilter}/>
         <Button color='secondary' style={{float:'right'}}>
           <CSVLink
             data={filteredDownload}
@@ -59,7 +59,7 @@ export default function AllCompletedRequests() {
                   <TableCell variant="head" align="center">Service Status</TableCell>
                 </Hidden>
                 <Hidden smDown>
-                  <TableCell variant="head" align="center">Beneficiary</TableCell>
+                  <TableCell variant="head" align="center">Cardholder</TableCell>
                 </Hidden>
                 <Hidden smDown>
                   <TableCell variant="head" align="center">Created</TableCell>

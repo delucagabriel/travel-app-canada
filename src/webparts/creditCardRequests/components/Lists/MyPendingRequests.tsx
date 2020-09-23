@@ -28,7 +28,7 @@ export default function MyPendingRequests() {
                   <TableCell variant="head" align="center">Service Status</TableCell>
                 </Hidden>
                 <Hidden smDown>
-                  <TableCell variant="head" align="center">Beneficiary</TableCell>
+                  <TableCell variant="head" align="center">Cardholder</TableCell>
                 </Hidden>
                 <Hidden smDown>
                   <TableCell variant="head" align="center">Created</TableCell>
@@ -40,7 +40,7 @@ export default function MyPendingRequests() {
             </TableHead>
             <TableBody>
               {myRequests
-              .filter(request => request.Status !== "Success" && request.Status !=="Unsuccess" )
+              .filter(request => request.Status !== "Success" && request.Status !=="Unsuccessful" )
               .map((row) => (
                 <TableRow key={row.Id}
                   onClick={() =>setRequestDetails({...row, open:true})}

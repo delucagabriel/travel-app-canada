@@ -30,7 +30,7 @@ export default function AllPendingRequests() {
 
   const unique = arr => arr.filter((el, i, array) => array.indexOf(el) === i);
 
-  const processButtons = unique(allRequests.filter(request => request.ApprovalStatus === 'Approved' && (request.Status !== "Success" && request.Status !=="Unsuccess")).map(row => row.Process));
+  const processButtons = unique(allRequests.filter(request => request.ApprovalStatus === 'Approved' && (request.Status !== "Success" && request.Status !=="Unsuccessful")).map(row => row.Process));
 
   return (
     <Grid container spacing={2}>
@@ -59,7 +59,7 @@ export default function AllPendingRequests() {
                   <TableCell variant="head" align="center">Service Status</TableCell>
                 </Hidden>
                 <Hidden smDown>
-                  <TableCell variant="head" align="center">Beneficiary</TableCell>
+                  <TableCell variant="head" align="center">Cardholder</TableCell>
                 </Hidden>
                 <Hidden smDown>
                   <TableCell variant="head" align="center">Created</TableCell>
@@ -71,7 +71,7 @@ export default function AllPendingRequests() {
             </TableHead>
             <TableBody>
               {allRequests
-              .filter(request => request.ApprovalStatus === 'Approved' && (request.Status !== "Success" && request.Status !=="Unsuccess") )
+              .filter(request => request.ApprovalStatus === 'Approved' && (request.Status !== "Success" && request.Status !=="Unsuccessful") )
               .filter(request => request.Process.includes(filter))
               .map((row) => (
                 <TableRow key={row.Id}
